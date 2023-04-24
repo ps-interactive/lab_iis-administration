@@ -1,2 +1,3 @@
-# lab_iis-administration
-Work files to support the "Administering Windows Server IIS" IT Ops lab
+# Administer Microsoft IIS
+
+Work files to support the "Administer Microsoft IIS" IT Ops lab
