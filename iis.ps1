@@ -104,14 +104,20 @@ $webConfigContent = @"
 $webConfigPath = (Get-WebSite -Name $siteName).physicalPath + "\web.config"
 Set-Content -Path $webConfigPath -Value $webConfigContent
 
+# Reset anonymous authentiction
+$websiteName = "CorpSite"
+Set-WebConfigurationProperty -Filter "system.webServer/security/authentication/basicAuthentication" -Name "enabled" -Value $false -PSPath "IIS:\Sites\$websiteName"
+Set-WebConfigurationProperty -Filter "system.webServer/security/authentication/anonymousAuthentication" -Name "enabled" -Value $true -PSPath "IIS:\Sites\$websiteName"
+
 # Back up IIS server configuration
-Backup-WebConfiguration -Name "IISConfigBackup"
+Backup-WebConfiguration -Name "iiscfg1"
 
 # Verify backup was created
 Explorer.exe C:\Windows\System32\inetsrv\backup
 
 # Back up website content
 $allWebsites = Get-Website
+$backupRoot = "C:\Backup"
 
 foreach ($singleWebsite in $allWebsites) {
   $siteName = $singleWebsite.Name
