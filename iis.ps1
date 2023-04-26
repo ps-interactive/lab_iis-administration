@@ -73,6 +73,37 @@ $binding.AddSslCertificate($thumbprint, "my")
 # Test access
 Start-Process -FilePath iexplore -ArgumentList https://ps-win-1
 
+# Create test user account
+$password = ConvertTo-SecureString "Pa$$w0rd!" -AsPlainText -Force
+$user = New-LocalUser -Name "test" -FullName "Test User" -Password $password -Description "Test User Account"
+Add-LocalGroupMember -Group "Users" -Member $user
+
+# Disable anonymous authentication
+Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/anonymousAuthentication" `
+-Name "enabled" -Value "False" -Location $siteName -PSPath 'IIS:\'
+
+# Configure Basic authentication
+Import-Module -Name IISAdministration
+Install-WindowsFeature -Name Web-Basic-Auth
+
+$siteName = "CorpSite"
+Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/basicAuthentication" `
+-Name "enabled" -Value "True" -Location $siteName -PSPath 'IIS:\'
+
+$webConfigContent = @"
+<configuration>
+  <system.web>
+    <authorization>
+      <allow roles="BUILTIN\Users" />
+      <deny users="?" />
+    </authorization>
+  </system.web>
+</configuration>
+"@
+
+$webConfigPath = (Get-WebSite -Name $siteName).physicalPath + "\web.config"
+Set-Content -Path $webConfigPath -Value $webConfigContent
+
 # Back up IIS server configuration
 Backup-WebConfiguration -Name "IISConfigBackup"
 
