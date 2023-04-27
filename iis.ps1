@@ -79,16 +79,14 @@ $user = New-LocalUser -Name "test" -FullName "Test User" -Password $password -De
 Add-LocalGroupMember -Group "Users" -Member $user
 
 # Disable anonymous authentication
-Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/anonymousAuthentication" `
--Name "enabled" -Value "False" -Location $siteName -PSPath 'IIS:\'
+Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/anonymousAuthentication" -Name "enabled" -Value "False" -Location $siteName -PSPath 'IIS:\'
 
 # Configure Basic authentication
 Import-Module -Name IISAdministration
 Install-WindowsFeature -Name Web-Basic-Auth
 
 $siteName = "CorpSite"
-Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/basicAuthentication" `
--Name "enabled" -Value "True" -Location $siteName -PSPath 'IIS:\'
+Set-WebConfigurationProperty -Filter "/system.webServer/security/authentication/basicAuthentication" -Name "enabled" -Value "True" -Location $siteName -PSPath 'IIS:\'
 
 $webConfigContent = @"
 <configuration>
