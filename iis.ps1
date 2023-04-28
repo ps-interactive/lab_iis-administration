@@ -74,7 +74,7 @@ $binding.AddSslCertificate($thumbprint, "my")
 Start-Process -FilePath iexplore -ArgumentList https://ps-win-1
 
 # Create test user account
-$password = ConvertTo-SecureString "Pa$$w0rd!" -AsPlainText -Force
+$password = ConvertTo-SecureString "1abcdefgH-2" -AsPlainText -Force
 $user = New-LocalUser -Name "test" -FullName "Test User" -Password $password -Description "Test User Account"
 Add-LocalGroupMember -Group "Users" -Member $user
 
@@ -104,8 +104,8 @@ Set-Content -Path $webConfigPath -Value $webConfigContent
 
 # Reset anonymous authentiction
 $websiteName = "CorpSite"
-Set-WebConfigurationProperty -Filter "system.webServer/security/authentication/basicAuthentication" -Name "enabled" -Value $false -PSPath "IIS:\Sites\$websiteName"
-Set-WebConfigurationProperty -Filter "system.webServer/security/authentication/anonymousAuthentication" -Name "enabled" -Value $true -PSPath "IIS:\Sites\$websiteName"
+Set-WebConfigurationProperty -Filter "system.webServer/security/authentication/basicAuthentication" -Name "enabled" -Value $false -PSPath "IIS:\"
+Set-WebConfigurationProperty -Filter "system.webServer/security/authentication/anonymousAuthentication" -Name "enabled" -Value $true -PSPath "IIS:\"
 
 # Back up IIS server configuration
 Backup-WebConfiguration -Name "iiscfg1"
