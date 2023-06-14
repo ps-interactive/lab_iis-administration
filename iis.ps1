@@ -71,7 +71,7 @@ $binding = Get-WebBinding -Name CorpSite -Protocol https
 $binding.AddSslCertificate($thumbprint, "my")
 
 # Test access
-Start-Process -FilePath iexplore -ArgumentList https://ps-win-1
+Start-Process -FilePath msedge -ArgumentList https://ps-win-1
 
 # Create test user account
 $password = ConvertTo-SecureString "1abcdefgH-2" -AsPlainText -Force
